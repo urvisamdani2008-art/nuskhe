@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuskhe — Home Remedies, The Ayurvedic Way</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --turmeric:#C98A2C;
+    --tulsi:#3F5D3A;
+    --ivory:#FBF6EC;
+    --clay:#2E2018;
+    --sandalwood:#EFE3CC;
+    --rust:#A64B3A;
+    --line:#DDD0B0;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ivory);
+    color:var(--clay);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.5;
+  }
+  h1,h2,h3,.serif{font-family:'Lora', serif;}
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px;}
+
+  /* Header */
+  header{padding:28px 0 12px;border-bottom:1px solid var(--line);}
+  .brandrow{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  .brand{font-family:'Lora',serif;font-weight:700;font-size:26px;color:var(--tulsi);}
+  .tagline{font-size:14px;color:#6b5c47;}
+
+  /* Hero */
+  .hero{padding:48px 0 36px;}
+  .hero-label{font-size:13px;color:var(--turmeric);font-weight:600;margin-bottom:6px;}
+  .hero h1{font-size:38px;line-height:1.2;margin:0 0 14px;max-width:620px;}
+  .hero p{max-width:560px;color:#5b4c3a;font-size:16px;margin:0 0 22px;}
+  .hero-remedy{
+    background:var(--sandalwood);
+    border-left:5px solid var(--turmeric);
+    padding:18px 22px;
+    max-width:560px;
+    border-radius:2px;
+  }
+  .hero-remedy .rname{font-family:'Lora',serif;font-weight:600;font-size:18px;margin-bottom:4px;}
+  .hero-remedy .rfor{font-size:13px;color:#6b5c47;margin-bottom:8px;}
+  .hero-remedy .ringr{font-size:14px;color:#4a3d2c;}
+
+  /* Entry points */
+  .entries{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:8px 0 40px;}
+  @media (max-width:640px){.entries{grid-template-columns:1fr;}}
+  .entry{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:20px;
+  }
+  .entry h3{margin:0 0 6px;font-size:18px;}
+  .entry p.desc{margin:0 0 14px;font-size:13.5px;color:#6b5c47;}
+  .searchbox{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:4px;font-family:inherit;font-size:14px;background:var(--ivory);}
+  .searchbox:focus{outline:2px solid var(--tulsi);outline-offset:1px;}
+
+  .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+  .chip{
+    border:1px solid var(--line);
+    background:var(--ivory);
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+    cursor:pointer;
+    color:var(--clay);
+    transition:background .15s, color .15s;
+  }
+  .chip:hover{background:var(--sandalwood);}
+  .chip.active{background:var(--tulsi);color:#fff;border-color:var(--tulsi);}
+
+  /* Section heading */
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;margin:8px 0 18px;}
+  .section-head h2{font-size:22px;margin:0;}
+  .count{font-size:13px;color:#8a7960;}
+
+  /* Remedy grid */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;padding-bottom:60px;}
+  @media (max-width:640px){.grid{grid-template-columns:1fr;}}
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:18px 20px;
+    cursor:pointer;
+    transition:box-shadow .15s, transform .15s;
+  }
+  .card:hover{box-shadow:0 4px 14px rgba(46,32,24,0.08);}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .card h3{margin:0 0 6px;font-size:17px;}
+  .cat-tag{
+    font-size:11px;
+    padding:3px 9px;
+    border-radius:20px;
+    white-space:nowrap;
+    color:#fff;
+    font-weight:600;
+  }
+  .card .symptoms{font-size:13px;color:#6b5c47;margin:4px 0 10px;}
+  .card .ingr-line{font-size:13.5px;color:#4a3d2c;}
+  .card .expand-hint{font-size:12px;color:var(--turmeric);margin-top:10px;font-weight:600;}
+
+  .empty{padding:40px 0;text-align:center;color:#8a7960;}
+
+  /* Modal */
+  .overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(46,32,24,0.45);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--ivory);
+    max-width:520px;width:100%;
+    border-radius:8px;
+    padding:28px 30px;
+    max-height:85vh;
+    overflow-y:auto;
+    position:relative;
+  }
+  .modal h2{margin:0 0 4px;font-size:24px;}
+  .modal .modal-cat{display:inline-block;margin-bottom:14px;}
+  .modal-close{
+    position:absolute;top:16px;right:18px;
+    background:none;border:none;font-size:20px;
+    cursor:pointer;color:#6b5c47;
+    font-family:inherit;
+  }
+  .modal-section{margin-top:16px;}
+  .modal-section h4{margin:0 0 6px;font-size:13px;text-transform:none;color:var(--tulsi);font-weight:600;}
+  .modal-section p, .modal-section li{font-size:14.5px;color:#3a2f22;}
+  .caution{
+    margin-top:18px;
+    background:#F4E7DE;
+    border-left:4px solid var(--rust);
+    padding:12px 14px;
+    font-size:13.5px;
+    color:#5c2c1e;
+    border-radius:2px;
+  }
+
+  footer{border-top:1px solid var(--line);padding:24px 0 40px;font-size:13px;color:#8a7960;}
+
+  .disclaimer-banner{
+    background:#F4E7DE;
+    border-bottom:1px solid var(--rust);
+  }
+  .disclaimer-banner .wrap{padding:14px 24px;}
+  .disclaimer-banner p{
+    margin:0;
+    font-size:13.5px;
+    color:#5c2c1e;
+    line-height:1.5;
+  }
+  .disclaimer-banner strong{color:#4a2317;}
+
+  .footer-disclaimer{
+    max-width:640px;
+    margin-bottom:10px;
+  }
+  .footer-disclaimer h4{
+    font-family:'Lora',serif;
+    font-size:14px;
+    color:var(--clay);
+    margin:0 0 6px;
+  }
+
+  /* Hero reveal + leaf motif */
+  @keyframes riseIn{
+    from{opacity:0;transform:translateY(14px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+  .hero-label,.hero h1,.hero p,.hero-remedy{
+    opacity:0;
+    animation:riseIn .6s ease-out forwards;
+  }
+  .hero h1{animation-delay:.08s;}
+  .hero p{animation-delay:.16s;}
+  .hero-remedy{animation-delay:.24s;}
+  @media (prefers-reduced-motion:reduce){
+    .hero-label,.hero h1,.hero p,.hero-remedy{animation:none;opacity:1;}
+  }
+  .hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;}
+  .hero-leaf{flex-shrink:0;width:110px;height:110px;opacity:.9;}
+  @media (max-width:640px){.hero-leaf{display:none;}}
+
+  /* Stat bar */
+  .statbar{display:flex;gap:28px;margin-top:26px;flex-wrap:wrap;}
+  .stat-num{font-family:'Lora',serif;font-size:26px;font-weight:700;color:var(--tulsi);line-height:1;}
+  .stat-label{font-size:12.5px;color:#6b5c47;margin-top:2px;}
+
+  /* Category browse */
+  .cat-browse{padding:4px 0 28px;}
+  .cat-browse h3{font-size:15px;margin:0 0 12px;color:#6b5c47;font-weight:500;}
+  .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  @media (max-width:640px){.cat-grid{grid-template-columns:1fr 1fr;}}
+  .cat-card{
+    border-radius:6px;
+    padding:16px 16px;
+    cursor:pointer;
+    color:#fff;
+    font-family:'Lora',serif;
+    font-weight:600;
+    font-size:15px;
+    transition:transform .15s;
+    border:none;
+    text-align:left;
+  }
+  .cat-card:hover{transform:translateY(-2px);}
+  .cat-card .cat-count{display:block;font-family:'Work Sans',sans-serif;font-weight:400;font-size:12px;opacity:.85;margin-top:4px;}
+  .cat-card.active{outline:3px solid var(--clay);outline-offset:2px;}
+
+  /* Glossary */
+  .glossary{padding:10px 0 50px;border-top:1px solid var(--line);margin-top:10px;}
+  .glossary-head{padding-top:36px;margin-bottom:18px;}
+  .glossary-head h2{font-size:22px;margin:0 0 6px;}
+  .glossary-head p{margin:0;font-size:14px;color:#6b5c47;max-width:560px;}
+  .gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:640px){.gloss-grid{grid-template-columns:1fr;}}
+  .gloss-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:14px 16px;
+  }
+  .gloss-card .gname{font-family:'Lora',serif;font-weight:600;font-size:15px;color:var(--tulsi);margin-bottom:4px;}
+  .gloss-card p{margin:0;font-size:13.5px;color:#4a3d2c;}
+  .gloss-card .gsource{margin-top:6px;font-size:12px;color:#8a7960;font-style:italic;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap brandrow">
+    <div class="brand">Nuskhe</div>
+    <div class="tagline">Home remedies passed down, kept in one place</div>
+  </div>
+</header>
+
+<div class="disclaimer-banner">
+  <div class="wrap">
+    <p><strong>Please note:</strong> these remedies are meant for everyday, mild discomfort only. If a symptom is severe, doesn't improve in a couple of days, or keeps coming back, please see a doctor rather than relying on home treatment.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="hero-label">Remedy of the day</div>
+        <h1>Before you reach for the medicine cabinet, check what's already in your kitchen.</h1>
+        <p>A searchable collection of Ayurvedic home remedies — the kind your grandmother already knows — organised by what's bothering you or what you already have at home.</p>
+      </div>
+      <svg class="hero-leaf" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 8C30 20 15 40 15 60c0 16 14 28 30 28s30-8 30-28c0-8-2-16-6-24" fill="none" stroke="#3F5D3A" stroke-width="3" stroke-linecap="round"/>
+        <path d="M50 8c8 18 12 36 8 60" fill="none" stroke="#3F5D3A" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+        <circle cx="50" cy="8" r="4" fill="#C98A2C"/>
+        <path d="M32 45c6-2 12-1 16 4M32 60c7-2 14-1 19 5" fill="none" stroke="#C98A2C" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+      </svg>
+    </div>
+    <div class="hero-remedy" id="remedyOfDay"></div>
+    <div class="statbar" id="statBar"></div>
+  </section>
+
+  <section class="entries">
+    <div class="entry">
+      <h3>Search by symptom</h3>
+      <p class="desc">Tell us what's wrong — cold, headache, upset stomach — and we'll show what helps.</p>
+      <input type="text" class="searchbox" id="symptomSearch" placeholder="e.g. sore throat, acidity, sleep...">
+    </div>
+    <div class="entry">
+      <h3>What's in your kitchen?</h3>
+      <p class="desc">Pick what you already have. We'll show remedies you can make right now.</p>
+      <div class="chip-row" id="ingredientChips"></div>
+    </div>
+  </section>
+
+  <section class="cat-browse">
+    <h3>Or browse by category</h3>
+    <div class="cat-grid" id="categoryGrid"></div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2 id="resultsTitle">All remedies</h2>
+      <span class="count" id="resultsCount"></span>
+    </div>
+    <div class="grid" id="remedyGrid"></div>
+    <div class="empty" id="emptyState" style="display:none;">No remedies match that. Try a different symptom, ingredient, or category.</div>
+  </section>
+
+  <section class="glossary">
+    <div class="glossary-head">
+      <h2>Know your ingredients</h2>
+      <p>A quick guide to the herbs and staples that show up again and again in these remedies — including where each one comes from: documented in classical Ayurvedic texts, or passed down as household tradition.</p>
+    </div>
+    <div class="gloss-grid" id="glossaryGrid"></div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-disclaimer">
+      <h4>Not a substitute for medical advice</h4>
+      <p>These are traditional home remedies for everyday, mild discomfort — not medical treatment, and not meant to diagnose or cure anything. Every body reacts differently, so stop a remedy if it doesn't suit you.</p>
+    </div>
+    <div class="footer-disclaimer">
+      <h4>When to see a doctor instead</h4>
+      <p>If a symptom is severe, lasts more than 2-3 days, keeps returning, or involves fever, difficulty breathing, or intense pain — don't self-treat. For anything urgent or serious, see a general physician right away.</p>
+    </div>
+    <div class="footer-disclaimer">
+      <h4>For personalised Ayurvedic guidance</h4>
+      <p>For a proper Ayurvedic diagnosis or a treatment plan suited to you specifically, consult a <strong>BAMS-qualified Ayurvedic doctor</strong> (Bachelor of Ayurvedic Medicine and Surgery) — for example, at a recognised Ayurvedic hospital, wellness centre, or AYUSH clinic near you. This app is a starting reference, not a replacement for their guidance.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+const CATEGORY_COLORS = {
+  "Cold & Cough": "#C98A2C",
+  "Digestion": "#3F5D3A",
+  "Skin & Hair": "#A64B3A",
+  "Sleep & Stress": "#6B5B95",
+  "Aches & Pains": "#4A6670",
+  "Immunity": "#8C7A3C"
+};
+
+const remedies = [
+  {
+    name: "Ginger-Tulsi Kadha",
+    category: "Cold & Cough",
+    symptoms: ["cold","cough","sore throat","congestion"],
+    ingredients: ["ginger","tulsi","black pepper","honey"],
+    method: "Boil crushed ginger, 5-6 tulsi leaves and a pinch of crushed black pepper in a cup of water for 5-7 minutes. Strain, cool slightly, and stir in a teaspoon of honey.",
+    when: "Twice a day, morning and night, while symptoms last.",
+    caution: "Skip honey for children under 1 year. Reduce pepper if you have acidity."
+  },
+  {
+    name: "Turmeric Milk (Haldi Doodh)",
+    category: "Immunity",
+    symptoms: ["cold","body ache","immunity","cough"],
+    ingredients: ["turmeric","milk","black pepper"],
+    method: "Warm a cup of milk, stir in half a teaspoon of turmeric and a pinch of black pepper. Simmer for 2 minutes.",
+    when: "Once at night before sleeping.",
+    caution: "Avoid if lactose intolerant — can be made with warm water instead."
+  },
+  {
+    name: "Ajwain Water for Bloating",
+    category: "Digestion",
+    symptoms: ["indigestion","bloating","gas","stomach ache"],
+    ingredients: ["ajwain"],
+    method: "Boil a teaspoon of ajwain (carom seeds) in a cup of water for 5 minutes until it turns light brown. Strain and sip warm.",
+    when: "After a heavy meal, or when bloated.",
+    caution: "Avoid large amounts during pregnancy without checking with a doctor."
+  },
+  {
+    name: "Fennel-Honey for Acidity",
+    category: "Digestion",
+    symptoms: ["acidity","heartburn","indigestion"],
+    ingredients: ["fennel","honey"],
+    method: "Chew a teaspoon of fennel seeds slowly after meals, or steep them in hot water for 5 minutes and drink with honey.",
+    when: "After meals, especially heavy or spicy ones.",
+    caution: "Generally safe, but skip honey for infants."
+  },
+  {
+    name: "Jeera Water for Digestion",
+    category: "Digestion",
+    symptoms: ["indigestion","bloating","gas"],
+    ingredients: ["jeera"],
+    method: "Soak a teaspoon of jeera (cumin) in a glass of water overnight. Boil the same water in the morning for 5 minutes, strain, and drink warm.",
+    when: "First thing in the morning, on an empty stomach.",
+    caution: "Safe for most people; reduce quantity if you have very low blood pressure."
+  },
+  {
+    name: "Warm Turmeric-Salt Gargle",
+    category: "Cold & Cough",
+    symptoms: ["sore throat","cough"],
+    ingredients: ["turmeric","salt"],
+    method: "Mix half a teaspoon each of turmeric and salt in a glass of warm water. Gargle for 30 seconds.",
+    when: "2-3 times a day.",
+    caution: "Do not swallow the gargle. Not for children too young to gargle safely."
+  },
+  {
+    name: "Ashwagandha Warm Milk",
+    category: "Sleep & Stress",
+    symptoms: ["sleep","stress","anxiety","insomnia"],
+    ingredients: ["ashwagandha","milk"],
+    method: "Stir half a teaspoon of ashwagandha powder into a warm cup of milk. Sweeten lightly if needed.",
+    when: "30-45 minutes before bed.",
+    caution: "Avoid during pregnancy or if on thyroid medication without medical advice."
+  },
+  {
+    name: "Brahmi-Tulsi Calming Tea",
+    category: "Sleep & Stress",
+    symptoms: ["stress","anxiety","headache"],
+    ingredients: ["tulsi","brahmi"],
+    method: "Steep tulsi leaves and a small amount of brahmi powder in hot water for 5-7 minutes. Strain and sip slowly.",
+    when: "In the evening, when winding down.",
+    caution: "Introduce brahmi gradually — start with a small amount."
+  },
+  {
+    name: "Ginger-Peppermint for Headache",
+    category: "Aches & Pains",
+    symptoms: ["headache","nausea"],
+    ingredients: ["ginger","peppermint"],
+    method: "Steep crushed ginger and a few peppermint leaves in hot water for 5 minutes. Drink warm, and inhale the steam before drinking.",
+    when: "At the onset of a headache.",
+    caution: "Avoid strong peppermint oil directly on skin for young children."
+  },
+  {
+    name: "Warm Mustard Oil Massage",
+    category: "Aches & Pains",
+    symptoms: ["joint pain","body ache","muscle pain"],
+    ingredients: ["mustard oil","garlic"],
+    method: "Warm mustard oil with a crushed garlic clove until fragrant. Cool to a comfortable temperature and massage into the sore area.",
+    when: "Once daily, or before sleeping on a painful day.",
+    caution: "Test on a small skin patch first to check for irritation."
+  },
+  {
+    name: "Aloe Vera Gel for Sunburn",
+    category: "Skin & Hair",
+    symptoms: ["sunburn","skin irritation","rash"],
+    ingredients: ["aloe vera"],
+    method: "Apply fresh aloe vera gel directly to the affected skin. Leave it on until absorbed, no need to rinse.",
+    when: "2-3 times a day until redness settles.",
+    caution: "Do a patch test first if using aloe vera on skin for the first time."
+  },
+  {
+    name: "Besan-Turmeric Face Pack",
+    category: "Skin & Hair",
+    symptoms: ["dull skin","acne","skin glow"],
+    ingredients: ["besan","turmeric","milk"],
+    method: "Mix two tablespoons of besan (gram flour) with a pinch of turmeric and enough milk or water to form a paste. Apply, leave for 15 minutes, then rinse.",
+    when: "2 times a week.",
+    caution: "Turmeric can temporarily stain skin yellow — this fades within a day."
+  },
+  {
+    name: "Amla-Honey Immunity Mix",
+    category: "Immunity",
+    symptoms: ["immunity","weakness","cold"],
+    ingredients: ["amla","honey"],
+    method: "Mix a teaspoon of amla (Indian gooseberry) powder with honey to form a thick paste.",
+    when: "Once daily, in the morning.",
+    caution: "Skip honey for children under 1 year."
+  },
+  {
+    name: "Clove for Toothache",
+    category: "Aches & Pains",
+    symptoms: ["toothache","gum pain"],
+    ingredients: ["clove"],
+    method: "Place a whole clove near the painful tooth and gently bite to release the oil, or dab a drop of clove oil on a cotton swab and apply.",
+    when: "As needed for temporary relief.",
+    caution: "This eases pain temporarily — see a dentist for the underlying issue."
+  },
+  {
+    name: "Coconut Oil-Camphor for Cough at Night",
+    category: "Cold & Cough",
+    symptoms: ["cough","congestion","cold"],
+    ingredients: ["coconut oil","camphor"],
+    method: "Warm coconut oil with a small piece of camphor until it dissolves. Massage gently onto the chest and back before bed.",
+    when: "At night before sleeping.",
+    caution: "Keep away from the nose and eyes. Not for infants."
+  },
+  {
+    name: "Curd-Turmeric for Hiccups",
+    category: "Digestion",
+    symptoms: ["hiccups"],
+    ingredients: ["curd"],
+    method: "Eat a spoonful of plain curd slowly, or sip on buttermilk.",
+    when: "As soon as hiccups start.",
+    caution: "Generally safe for most people."
+  },
+  {
+    name: "Tulsi-Ginger Steam Inhalation",
+    category: "Cold & Cough",
+    symptoms: ["congestion","cold","blocked nose"],
+    ingredients: ["tulsi","ginger"],
+    method: "Boil water with crushed ginger and a handful of tulsi leaves. Inhale the steam under a towel for 5-8 minutes.",
+    when: "Once or twice a day.",
+    caution: "Keep a safe distance from boiling water to avoid burns; not for young children unsupervised."
+  },
+  {
+    name: "Triphala Water for Constipation",
+    category: "Digestion",
+    symptoms: ["constipation","bloating"],
+    ingredients: ["triphala"],
+    method: "Soak half a teaspoon of triphala powder in warm water overnight. Strain if needed and drink in the morning.",
+    when: "Once daily, preferably before bed or first thing in the morning.",
+    caution: "Start with a small amount — too much can cause loose motion. Avoid during pregnancy without medical advice."
+  },
+  {
+    name: "Coconut Oil for Dry, Cracked Heels",
+    category: "Skin & Hair",
+    symptoms: ["dry skin","cracked heels"],
+    ingredients: ["coconut oil"],
+    method: "Massage warm coconut oil into clean feet, focusing on heels. Wear cotton socks overnight to lock in moisture.",
+    when: "Every night until skin softens.",
+    caution: "Generally safe; discontinue if irritation occurs."
+  },
+  {
+    name: "Amla-Coconut Hair Oil for Hair Fall",
+    category: "Skin & Hair",
+    symptoms: ["hair fall","dandruff","dry scalp"],
+    ingredients: ["amla","coconut oil"],
+    method: "Warm coconut oil with a spoon of amla powder for a few minutes. Cool slightly and massage into the scalp. Leave for an hour before washing.",
+    when: "2 times a week.",
+    caution: "Patch test if you have a sensitive scalp."
+  },
+  {
+    name: "Clove-Salt Rinse for Mouth Ulcers",
+    category: "Aches & Pains",
+    symptoms: ["mouth ulcer","gum pain"],
+    ingredients: ["clove","salt"],
+    method: "Dissolve a pinch of salt in warm water and rinse the mouth. Alternatively, dab a little clove oil directly on the ulcer.",
+    when: "2-3 times a day.",
+    caution: "Avoid clove oil directly on very young children's gums."
+  },
+  {
+    name: "Warm Garlic Oil for Ear Ache",
+    category: "Aches & Pains",
+    symptoms: ["ear ache","ear pain"],
+    ingredients: ["garlic","mustard oil"],
+    method: "Warm mustard oil with a crushed garlic clove until fragrant, then strain and cool until just warm. Place 2-3 drops in the affected ear.",
+    when: "Once, when the ache starts.",
+    caution: "Never use if there is discharge from the ear or a suspected eardrum injury — see a doctor instead."
+  },
+  {
+    name: "Rose Water Eye Compress",
+    category: "Sleep & Stress",
+    symptoms: ["eye strain","tired eyes"],
+    ingredients: ["rose water"],
+    method: "Soak two cotton pads in chilled rose water and place over closed eyes for 10 minutes.",
+    when: "In the evening, after screen-heavy days.",
+    caution: "Use pure, food/cosmetic-grade rose water only."
+  },
+  {
+    name: "Ashwagandha for Study Fatigue",
+    category: "Sleep & Stress",
+    symptoms: ["fatigue","stress","exam stress","weakness"],
+    ingredients: ["ashwagandha","milk"],
+    method: "Mix a small amount of ashwagandha powder into warm milk, taken as a steady daily habit rather than only during exams.",
+    when: "Once daily, ideally at the same time each day.",
+    caution: "Avoid during pregnancy or with thyroid conditions without medical advice; not a substitute for sleep or rest."
+  }
+];
+
+const ALL_INGREDIENTS = ["ginger","tulsi","turmeric","honey","ajwain","fennel","jeera","milk","ashwagandha","garlic","aloe vera","besan","amla","clove","triphala","coconut oil","rose water"];
+
+const GLOSSARY = [
+  {name:"Turmeric", blurb:"An anti-inflammatory root used in cooking and remedies alike; the compound curcumin is behind most of its benefits.", source:"Documented in the Charaka Samhita and Sushruta Samhita as a digestive and wound-care herb, used for over 2,000 years."},
+  {name:"Tulsi (Holy Basil)", blurb:"A staple in almost every Indian household courtyard, used for colds, stress, and general immunity.", source:"Classified as a Rasayana (rejuvenating herb) in the Charaka Samhita, historically used for respiratory and immunity support."},
+  {name:"Ashwagandha", blurb:"A calming root often called an 'adaptogen' — traditionally used to help the body handle stress.", source:"Listed among the primary Rasayana herbs in the Charaka Samhita's dedicated rejuvenation chapter."},
+  {name:"Ajwain (Carom Seeds)", blurb:"Small, strong-smelling seeds that are a go-to for bloating and indigestion after meals.", source:"A widespread household remedy passed down through regional tradition, rather than a named classical-text formulation."},
+  {name:"Triphala", blurb:"A blend of three dried fruits, commonly used to support gentle, regular digestion.", source:"Specific Triphala formulations are documented in the Charaka Samhita's Chikitsa Sthana chapter."},
+  {name:"Amla (Indian Gooseberry)", blurb:"A sour fruit rich in Vitamin C, used for immunity and as a base for hair oils.", source:"Named in classical texts as one of the most valued rejuvenating fruits."},
+  {name:"Brahmi", blurb:"A herb traditionally associated with calming the mind and supporting focus.", source:"Referenced across classical Ayurvedic literature as a Medhya (mind-supporting) herb."},
+  {name:"Clove", blurb:"A strong, numbing spice — a classic quick fix for tooth and gum discomfort.", source:"A long-standing household remedy for dental discomfort across South Asian tradition."}
+];
+
+let activeIngredients = new Set();
+let symptomQuery = "";
+let activeCategory = null;
+
+function renderChips(){
+  const row = document.getElementById('ingredientChips');
+  row.innerHTML = "";
+  ALL_INGREDIENTS.forEach(ing => {
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (activeIngredients.has(ing) ? ' active' : '');
+    chip.textContent = ing;
+    chip.onclick = () => {
+      if(activeIngredients.has(ing)) activeIngredients.delete(ing);
+      else activeIngredients.add(ing);
+      symptomQuery = "";
+      activeCategory = null;
+      document.getElementById('symptomSearch').value = "";
+      renderChips();
+      renderCategoryGrid();
+      renderGrid();
+    };
+    row.appendChild(chip);
+  });
+}
+
+function renderCategoryGrid(){
+  const grid = document.getElementById('categoryGrid');
+  grid.innerHTML = "";
+  Object.keys(CATEGORY_COLORS).forEach(cat => {
+    const n = remedies.filter(r => r.category === cat).length;
+    const btn = document.createElement('button');
+    btn.className = 'cat-card' + (activeCategory === cat ? ' active' : '');
+    btn.style.background = CATEGORY_COLORS[cat];
+    btn.innerHTML = `${cat}<span class="cat-count">${n} remed${n === 1 ? 'y' : 'ies'}</span>`;
+    btn.onclick = () => {
+      activeCategory = (activeCategory === cat) ? null : cat;
+      activeIngredients.clear();
+      symptomQuery = "";
+      document.getElementById('symptomSearch').value = "";
+      renderChips();
+      renderCategoryGrid();
+      renderGrid();
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function renderStatBar(){
+  const cats = Object.keys(CATEGORY_COLORS).length;
+  const ingr = ALL_INGREDIENTS.length;
+  document.getElementById('statBar').innerHTML = `
+    <div><div class="stat-num">${remedies.length}</div><div class="stat-label">remedies</div></div>
+    <div><div class="stat-num">${cats}</div><div class="stat-label">categories</div></div>
+    <div><div class="stat-num">${ingr}</div><div class="stat-label">everyday ingredients</div></div>
+  `;
+}
+
+function renderGlossary(){
+  const grid = document.getElementById('glossaryGrid');
+  grid.innerHTML = "";
+  GLOSSARY.forEach(g => {
+    const card = document.createElement('div');
+    card.className = 'gloss-card';
+    card.innerHTML = `<div class="gname">${g.name}</div><p>${g.blurb}</p><div class="gsource">${g.source}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function matchesFilters(r){
+  if(activeCategory){
+    return r.category === activeCategory;
+  }
+  if(activeIngredients.size > 0){
+    return [...activeIngredients].some(ing => r.ingredients.includes(ing));
+  }
+  if(symptomQuery.trim() !== ""){
+    const q = symptomQuery.toLowerCase();
+    return r.symptoms.some(s => s.includes(q)) || r.name.toLowerCase().includes(q);
+  }
+  return true;
+}
+
+function renderGrid(){
+  const grid = document.getElementById('remedyGrid');
+  const empty = document.getElementById('emptyState');
+  const title = document.getElementById('resultsTitle');
+  const count = document.getElementById('resultsCount');
+
+  const filtered = remedies.filter(matchesFilters);
+
+  if(activeCategory){
+    title.textContent = activeCategory;
+  } else if(activeIngredients.size > 0){
+    title.textContent = "Made with what you have";
+  } else if(symptomQuery.trim() !== ""){
+    title.textContent = 'Remedies for "' + symptomQuery + '"';
+  } else {
+    title.textContent = "All remedies";
+  }
+  count.textContent = filtered.length + (filtered.length === 1 ? " remedy" : " remedies");
+
+  grid.innerHTML = "";
+  if(filtered.length === 0){
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+
+  filtered.forEach((r, idx) => {
+    const realIdx = remedies.indexOf(r);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.onclick = () => openModal(realIdx);
+    const color = CATEGORY_COLORS[r.category] || "#999";
+    card.innerHTML = `
+      <div class="card-top">
+        <h3>${r.name}</h3>
+        <span class="cat-tag" style="background:${color}">${r.category}</span>
+      </div>
+      <div class="symptoms">For: ${r.symptoms.join(', ')}</div>
+      <div class="ingr-line">Needs: ${r.ingredients.join(', ')}</div>
+      <div class="expand-hint">View remedy →</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function openModal(idx){
+  const r = remedies[idx];
+  const color = CATEGORY_COLORS[r.category] || "#999";
+  const modal = document.getElementById('modalContent');
+  modal.innerHTML = `
+    <button class="modal-close" id="closeBtn">&times;</button>
+    <h2>${r.name}</h2>
+    <span class="cat-tag modal-cat" style="background:${color}">${r.category}</span>
+    <div class="modal-section">
+      <h4>Ingredients</h4>
+      <p>${r.ingredients.join(', ')}</p>
+    </div>
+    <div class="modal-section">
+      <h4>Method</h4>
+      <p>${r.method}</p>
+    </div>
+    <div class="modal-section">
+      <h4>When to take</h4>
+      <p>${r.when}</p>
+    </div>
+    <div class="caution"><strong>Caution:</strong> ${r.caution}</div>
+  `;
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('closeBtn').onclick = closeModal;
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('show');
+}
+document.getElementById('overlay').addEventListener('click', (e) => {
+  if(e.target.id === 'overlay') closeModal();
+});
+
+function renderRemedyOfDay(){
+  const dayIndex = new Date().getDate() % remedies.length;
+  const r = remedies[dayIndex];
+  const box = document.getElementById('remedyOfDay');
+  box.innerHTML = `
+    <div class="rname">${r.name}</div>
+    <div class="rfor">For: ${r.symptoms.join(', ')}</div>
+    <div class="ringr">Needs: ${r.ingredients.join(', ')}</div>
+  `;
+  box.style.cursor = "pointer";
+  box.onclick = () => openModal(remedies.indexOf(r));
+}
+
+document.getElementById('symptomSearch').addEventListener('input', (e) => {
+  symptomQuery = e.target.value;
+  activeIngredients.clear();
+  activeCategory = null;
+  renderChips();
+  renderCategoryGrid();
+  renderGrid();
+});
+
+renderChips();
+renderCategoryGrid();
+renderGrid();
+renderRemedyOfDay();
+renderStatBar();
+renderGlossary();
+</script>
+
+</body>
+</html>
